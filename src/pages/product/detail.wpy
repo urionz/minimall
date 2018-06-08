@@ -1,0 +1,614 @@
+<template lang="pug">
+    quickTool
+    scroll-view.scroll_view
+        swiper.detail_img(hidden="{{ !!detail.video }}")
+            swiper-item
+                image(mode="widthFix", src="{{ detail.thumb_x }}")
+        video.video(
+            src="{{ detail.video }}",
+            hidden="{{ !detail.video }}",
+            controls="true",
+            autoplay="false",
+            initialTime="0",
+            objectFit="cover"
+        )
+        view.detail_info
+            view.title_group
+                view.detail_title
+                    image.tmall(src="{{detail.platform==1? (detail.shop_type == 2 ? configure.resource.b_icon : configure.resource.m_icon ) : configure.resource.pdd_icon }}")
+                    | {{ detail.title }}
+                view.detail_sales
+                    view.sales_logo
+                        image(src="../../assets/image/170.png")
+                        text 销量
+                    view {{ detail.sold_quantity }}
+            view.detail_price_group
+                view.detail_price
+                    text ￥
+                    text {{ filter.toFixed(detail.net_price / 100) }}
+                    text 券后
+                view.detail_rebate
+                    view.rebate_name 约返
+                    view.rebate_value {{ filter.toFixed(detail.commission / 100) }}元
+            view.detail_coupon_group
+                view.detail_coupon {{ filter.toFixed(detail.coupon_price / 100) }}元优惠券
+                view.buy_btn(@tap="copy") 领券购买
+        view.recommend
+            view.recommond_top 推荐
+            text {{ detail.recommend }}
+        view.detail_image_list
+            view.detail_image_title 宝贝图文详情
+            view.rel_image_list
+                repeat(for="{{ detail.images }}", key="index", item="image")
+                    image(mode="widthFix", src="{{ image }}")
+        view.footer
+            view.footer_price
+                text 券后
+                text {{ filter.toFixed(detail.net_price / 100) }}
+                text.yuanPrice {{ filter.toFixed(detail.price / 100) }}
+            view.find_same 找同款
+            view.footer_btn(@tap="copy") 领券购买
+</template>
+
+<script>
+    import entry from '../entry'
+    import quickTool from '../../components/common/quick'
+    import filter from '../../wxs/helper.wxs'
+    import {
+        generatorWord,
+        productImagesGroup
+    } from '../../api'
+    import base from '../../mixins/base.wpy'
+    export default class extends entry {
+        data = {
+            loading: true,
+            detail: {
+                price: 0.00,
+                recommend: '',
+                coupon_price: 0.00,
+                title: '',
+                sold_quantity: 0,
+                thumb_x: '',
+                images: [],
+                video: '',
+                word: {
+                    tpwd: ''
+                }
+            }
+        }
+        wxs = {
+            filter
+        }
+        mixins = [base]
+        components = {
+            quickTool
+        }
+        async onLoad(params, {
+            preload
+        }) {
+            await super.onLoad()
+            if (preload) {
+                if (preload.detail) {
+                    this.detail = preload.detail
+                }
+            }
+            productImagesGroup(this.detail.source_id).then(res => {
+                if (res.data || res.data.images) {
+                    this.detail.images = res.data.images
+                }
+            })
+            this.$apply()
+        }
+        methods = {
+            async copy() {
+                if (!this.detail.word || !this.detail.word.tpwd) {
+                    const type = (!this.detail.content_id || this.detail.content_id == 0) ? 2 : 1
+                    const wordRes = await generatorWord(
+                        this.detail.platform,
+                        type,
+                        this.detail.source_id,
+                        this.detail.seller_id,
+                        this.detail.coupon_id || '',
+                        this.detail.title,
+                        this.detail.thumb_x,
+                        this.detail.price
+                    )
+                    this.detail.word = wordRes.data
+                    this.$apply()
+                }
+                wx.setClipboardData({
+                    data: this.detail.word.tpwd,
+                    success: () => {
+                        wx.getClipboardData({
+                            success: () => {
+                                wx.showModal({
+                                    title: '温馨提示',
+                                    content: '复制成功,请打开手机淘宝下单即可',
+                                    cancelText: '下单流程',
+                                    cancelColor: '#ff4e64',
+                                    confirmText: '知道了',
+                                    success: res => {
+                                        if (!res.confirm) {
+                                            this.$navigate('/pages/wizard/index')
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        }
+    }
+</script>
+
+<style>
+    page {
+        height: 100%;
+        position: relative;
+    }
+    .scroll_view {
+        position: relative;
+    }
+    .clear {
+        clear: both;
+    }
+    view,
+    text {
+        font-size: 24rpx;
+        color: #444;
+    }
+    .detail_img {
+        width: 100%;
+        height: 750rpx;
+        overflow: hidden;
+    }
+    .detail_img image {
+        width: 100%;
+        height: 100%;
+    }
+    .detail_info {
+        width: 90%;
+        padding: 35rpx 5%;
+        min-height: 270rpx;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    .title_group {
+        width: 100%;
+        height: 70rpx;
+        display: flex;
+        justify-content: space-between;
+    }
+    .detail_title {
+        width: 85%;
+        padding-right: 1%;
+        height: 70rpx;
+        font-size: 26rpx;
+        border-right: 1rpx solid #999;
+        line-height: 35rpx;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+    }
+    .tmall {
+        width: 28rpx;
+        height: 28rpx;
+        display: inline-block;
+        position: relative;
+        top: 5rpx;
+    }
+    .detail_sales {
+        width: 14%;
+        height: 70rpx;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: column;
+    }
+    .sales_logo image {
+        width: 19rpx;
+        height: 24rpx;
+        margin-right: 5rpx;
+        margin-left: 5rpx;
+    }
+    .detail_sales view:last-child {
+        color: #999;
+    }
+    .afterGuarantees {
+        width: 100%;
+        height: 60rpx;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    .Guarantees_item {
+        margin-right: 15rpx;
+    }
+    .Guarantees_item text {
+        color: #999;
+    }
+    .Guarantees_item image {
+        width: 24rpx;
+        height: 24rpx;
+        position: relative;
+        top: 3rpx;
+        margin-right: 5rpx;
+    }
+    .detail_price_group {
+        width: 100%;
+        height: 40rpx;
+        display: flex;
+        align-items: flex-end;
+        margin-top: 10rpx;
+    }
+    .detail_price {
+        height: 40rpx;
+        display: flex;
+        align-items: flex-end;
+        margin-right: 30rpx;
+    }
+    .detail_price text:first-child {
+        font-size: 24rpx;
+        color: #ff2608;
+    }
+    .detail_price text:nth-child(2) {
+        font-size: 28rpx;
+        color: #ff2608;
+        margin-right: 3rpx;
+    }
+    .detail_price text:last-child {
+        font-size: 22rpx;
+        color: #999;
+    }
+    .detail_rebate {
+        display: flex;
+        align-items: center;
+        height: 40rpx;
+    }
+    .detail_rebate view {
+        padding: 0 10rpx;
+        height: 40rpx;
+    }
+    .rebate_name {
+        background: linear-gradient(to right, #ff6501, #ff2908);
+        border-radius: 4rpx;
+        color: #fff;
+    }
+    .rebate_value {
+        box-sizing: border-box;
+        border: 1rpx solid #ff2608;
+        color: #ff2608;
+    }
+    .detail_coupon_group {
+        width: 100%;
+        height: 120rpx;
+        border-radius: 8rpx;
+        background: linear-gradient(to right, #ff6501, #ff2908);
+        margin-top: 30rpx;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+    }
+    .detail_coupon_group view {
+        text-align: center;
+        height: 95rpx;
+        color: #fff;
+        font-size: 30rpx;
+        line-height: 95rpx;
+    }
+    .detail_coupon_group::after {
+        content: '';
+        border-radius: 50%;
+        position: absolute;
+        width: 26rpx;
+        height: 26rpx;
+        top: 50%;
+        margin-top: -13rpx;
+        left: -13rpx;
+        background: #fff;
+    }
+    .detail_coupon_group::before {
+        content: '';
+        border-radius: 50%;
+        position: absolute;
+        width: 26rpx;
+        height: 26rpx;
+        top: 50%;
+        margin-top: -13rpx;
+        right: -13rpx;
+        background: #fff;
+    }
+    .detail_coupon {
+        width: 70%;
+        border-right: 1rpx dashed #fff;
+    }
+    .buy_btn {
+        width: 30%;
+    }
+    .recommend {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 16rpx 5%;
+        height: 122rpx;
+        zoom: 1;
+        line-height: 45rpx;
+        border-top: 10rpx solid #eee;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+    }
+    .recommend text {
+        color: #999;
+    }
+    .recommend_top {
+        width: 60rpx;
+        height: 36rpx;
+        font-size: 22rpx;
+        box-sizing: border-box;
+        text-align: center;
+        line-height: 34rpx;
+        display: inline-block;
+        position: relative;
+        color: #ff6800;
+        border: 1rpx solid #ff6800;
+        border-radius: 4rpx;
+        margin-right: 3rpx;
+    }
+    .seller {
+        width: 100%;
+        height: 150rpx;
+        border-top: 10rpx solid #eee;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .seller_img {
+        width: 100rpx;
+        height: 100rpx;
+        background: #eee;
+        overflow: hidden;
+        border-radius: 8rpx;
+    }
+    .seller_img image {
+        width: 100%;
+        height: 100%;
+    }
+    .seller_info {
+        width: 535rpx;
+        height: 100rpx;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+    }
+    .seller_name {
+        width: 100%;
+        font-size: 26rpx;
+        text-align: center;
+        font-weight: bold;
+    }
+    .seller_info_bottom {
+        width: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+    .seller_item {
+        margin: 0 15rpx;
+    }
+    .seller_item text:first-child {
+        color: #999;
+    }
+    .seller_item text:last-child {
+        color: #ff402d;
+    }
+    .comment {
+        border-top: 10rpx solid #eee;
+        width: 90%;
+        padding: 0 5%;
+        min-height: 480rpx;
+    }
+    .comment_title {
+        text-align: center;
+        font-size: 26rpx;
+        margin: 20rpx 0 30rpx 0;
+    }
+    .Buyers {
+        width: 100%;
+        min-height: 280rpx;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+    .Buyers_top {
+        width: 100%;
+        height: 60rpx;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .Buyers_img {
+        width: 60rpx;
+        height: 60rpx;
+        overflow: hidden;
+        background: #eee;
+        border-radius: 50%;
+    }
+    .Buyers_img image {
+        width: 100%;
+        height: 100%;
+    }
+    .Buyers_nick {
+        margin-left: 20rpx;
+    }
+    .comment_text {
+        font-size: 26rpx;
+        padding: 0 3%;
+        height: 40rpx;
+        line-height: 40rpx;
+        width: 94%;
+        overflow: hidden;
+        white-space: normal;
+        text-overflow: ellipsis;
+    }
+    .comment_img_list {
+        width: 94%;
+        padding: 0 3%;
+        display: flex;
+        justify-content: flex-start;
+        align-content: space-between;
+        flex-wrap: wrap;
+    }
+    .comment_img_item {
+        width: 22%;
+        height: 138rpx;
+        display: flex;
+        border-radius: 4rpx;
+        align-items: center;
+        background: #eee;
+        margin-top: 20rpx;
+        overflow: hidden;
+        margin-right: 4%;
+    }
+    .comment_img_item:nth-child(4n) {
+        margin-right: 0;
+    }
+    .comment_img_item image {
+        width: 100%;
+        height: 100%;
+    }
+    .comment_lookMore {
+        width: 220rpx;
+        height: 50rpx;
+        line-height: 50rpx;
+        border: 1rpx solid #ff402d;
+        border-radius: 25rpx;
+        text-align: center;
+        color: #ff402d;
+        font-size: 28rpx;
+        margin: 40rpx auto 30rpx auto;
+    }
+    .parameter {
+        width: 100%;
+        min-height: 100rpx;
+        border-top: 10rpx solid #eee;
+        padding-bottom: 10rpx;
+    }
+    .parameter_title {
+        width: 100%;
+        text-align: center;
+        font-size: 26rpx;
+        margin: 30rpx 0;
+    }
+    .parameter_list {
+        width: 100%;
+        min-height: 100rpx;
+    }
+    .parameter_item {
+        width: 90%;
+        padding: 0 5%;
+        min-height: 60rpx;
+        line-height: 60rpx;
+        border-bottom: 1rpx solid #eee;
+    }
+    .parameter_item:last-child {
+        border: 0;
+    }
+    .parameter_item text:first-child {
+        font-weight: bold;
+    }
+    .parameter_item text:nth-child(2) {
+        margin: 0 5rpx;
+    }
+    .detail_image_list {
+        width: 100%;
+        border-top: 10rpx solid #eee;
+    }
+    .detail_image_title {
+        width: 100%;
+        font-size: 26rpx;
+        text-align: center;
+        margin: 50rpx 0 20rpx 0;
+        font-weight: bold;
+    }
+    .rel_image_list {
+        width: 100%;
+    }
+    .rel_image_list image {
+        width: 100%;
+    }
+    .footer {
+        width: 100%;
+        height: 100rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1rpx solid #eee;
+        left: 0;
+        bottom: 0;
+        background: #fff;
+        position: fixed;
+        z-index: 40;
+    }
+    .footer_price {
+        width: 40%;
+        height: 100rpx;
+        display: flex;
+        align-items: center;
+    }
+    .footer_price text {
+        font-size: 24rpx;
+    }
+    .footer_price text:nth-child(1) {
+        margin-left: 20rpx;
+    }
+    .footer_price text:nth-child(2) {
+        color: #ff4e65;
+        font-size: 28rpx;
+    }
+    .footer_price text:nth-child(3) {
+        margin-left: 10rpx;
+    }
+    .yuanPrice {
+        text-decoration: line-through;
+        margin-left: 8rpx;
+        font-size: 24rpx;
+    }
+    .find_same {
+        width: 30%;
+        height: 100rpx;
+        line-height: 100rpx;
+        color: #fff;
+        text-align: center;
+        font-size: 30rpx;
+        background: linear-gradient(to right, #ff4e65, #ff3c3c);
+    }
+    .footer_btn {
+        width: 30%;
+        height: 100rpx;
+        line-height: 100rpx;
+        color: #fff;
+        text-align: center;
+        font-size: 30rpx;
+        background: linear-gradient(to right, #ff6501, #ff2908);
+    }
+    button {
+        padding: 0;
+        margin: 0;
+        line-height: normal;
+        position: static;
+    }
+    .video {
+        width: 100%;
+    }
+</style>

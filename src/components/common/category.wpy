@@ -1,0 +1,53 @@
+<template lang="pug">
+    tabView(
+        :list.sync="categories"
+    )
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import { getStore, connect } from 'wepy-redux'
+    import {
+        switchCategory
+    } from '../../store/actions'
+    import tabView from '../zanui/tab'
+    const store = getStore()
+
+    @connect({
+        categories: state => state.home.categories,
+        category_index: state => state.home.category_index
+    })
+    export default class extends wepy.component {
+        components = {
+            tabView
+        }
+        methods = {
+            async selectCate(index) {
+                await store.dispatch(switchCategory(index))
+            }
+        }
+    }
+</script>
+
+<style lang="scss">
+    .zan-tab__bd--scroll .zan-tab__item {
+        min-width: auto;
+    }
+
+    .zan-tab__item {
+        padding: 0;
+    }
+
+    .zan-tab__title {
+        padding: 0 30rpx;
+        border-bottom: 1rpx solid #f1f1f1;
+    }
+
+    .zan-tab__item--selected .zan-tab__title {
+        border-bottom: 1rpx solid #f44;
+    }
+
+    .zan-tab {
+        height: 44px;
+    }
+</style>

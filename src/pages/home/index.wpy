@@ -1,0 +1,137 @@
+<template lang="pug">
+    loadmore(loading.sync="loading")
+        view.container(slot="content")
+            view.search
+                field(
+                    mode="wrapped",
+                    type="input",
+                    placeholder="通过输入商品关键词搜索",
+                    value=""
+                )
+            bannerView(:section.sync="banners")
+            iconView(:section.sync="icons")
+            view.cxx-module
+                view.head
+                    text 每个人都在疯狂抢购的商品
+                    view.title
+                        view.zan-icon.zan-icon-hot
+                        | 全网最热商品
+                listProduct(:section.sync="products")
+    quickTool
+</template>
+
+<script>
+    import entry from '../entry'
+    import base from '../../mixins/base'
+    import field from '../../components/zanui/field'
+    import loadmore from '../../components/zanui/loadmore'
+    import productItem from '../../components/product/item'
+    import listProduct from '../../components/product/list'
+    import gridProduct from '../../components/product/grid'
+    import bannerView from '../../components/home/banner'
+    import iconView from '../../components/home/icon'
+    import announceView from '../../components/home/announce'
+    import loadMoreScroll from '../../components/common/loadMoreScroll'
+    import topHeader from '../../components/home/header'
+    import quickTool from '../../components/common/quick'
+    import { getStore, connect } from 'wepy-redux'
+    import findIndex from 'lodash.findindex'
+    import {
+        homePage,
+        homeCategorySectionFeed,
+        homeCategoryAppendFeed
+    } from '../../store/actions'
+    const store = getStore()
+
+    @connect({
+        sort: state => state.home.sort,
+        categories: state => state.home.categories,
+        category_index: state => state.home.category_index,
+        loading: state => state.home.loading,
+        banners: state => {
+            const index = findIndex(state.home.categories[state.home.category_index].sections, {
+                style: {
+                    layout: 1
+                }
+            })
+            return index >= 0 ? state.home.categories[state.home.category_index].sections[index] : []
+        },
+        icons: state => {
+            const index = findIndex(state.home.categories[state.home.category_index].sections, {
+                style: {
+                    layout: 4
+                }
+            })
+            return index >= 0 ? state.home.categories[state.home.category_index].sections[index] : []
+        },
+        announces: state => {
+            const index = findIndex(state.home.categories[state.home.category_index].sections, {
+                style: {
+                    layout: 100
+                }
+            })
+            return index >= 0 ? state.home.categories[state.home.category_index].sections[index] : []
+        },
+        products: state => {
+            const index = findIndex(state.home.categories[state.home.category_index].sections, {
+                style: {
+                    layout: 2
+                }
+            })
+            return index >= 0 ? state.home.categories[state.home.category_index].sections[index] : []
+        }
+    })
+    export default class extends entry {
+        config = {
+            navigationBarBackgroundColor: '#fff',
+            navigationBarTextStyle: 'black',
+            navigationBarTitleText: '优惠加载中',
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColor: '#fff'
+        }
+        mixins = [base]
+        components = {
+            productItem,
+            bannerView,
+            iconView,
+            announceView,
+            topHeader,
+            listProduct,
+            gridProduct,
+            loadMoreScroll,
+            quickTool,
+            field,
+            loadmore
+        }
+        async onLoad() {
+            await super.onLoad()
+            await this.init()
+        }
+        async init() {
+            // init the home page categories
+            await store.dispatch(homePage())
+            // init the home page recommend section feed
+            await store.dispatch(homeCategorySectionFeed())
+            this.$apply()
+        }
+        async onReachBottom() {
+            await store.dispatch(homeCategoryAppendFeed())
+            this.loading = !this.loading
+            this.$apply()
+        }
+        async onPullDownRefresh() {
+            await this.init()
+            wx.stopPullDownRefresh()
+        }
+        events = {
+            fieldFocus() {
+                this.$navigate('/pages/search/super')
+            }
+        }
+    }
+</script>
+
+<style lang="scss">
+    @import "../../assets/styles/index";
+</style>

@@ -1,0 +1,37 @@
+<template lang="pug">
+    view.entrance-5.mb20.btb1rpx
+        repeat(for="{{ section.feeds }}", key="{{ feed.id }}", item="feed")
+            view.item
+                image(mode="widthFix", src="{{ feed.thumb_x }}")
+                text {{ feed.title }}
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import base from '../../mixins/base'
+
+    export default class extends wepy.component {
+        props = {
+            section: {
+                type: Object,
+                default: {
+                    style: {
+                        layout: 0
+                    },
+                    feeds: [
+                        {
+                            id: 0,
+                            title: '',
+                            thumb_x: ''
+                        }
+                    ]
+                }
+            }
+        }
+        mixins = [base]
+    }
+</script>
+
+<style>
+
+</style>

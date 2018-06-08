@@ -1,0 +1,25 @@
+module.exports = {
+    toFixed: function(num,digit) {
+		if(!digit && digit != 0) {
+			return num.toFixed(2)
+		} else {
+			return num.toFixed(0)
+		}
+    },
+	truncateString: function(str, len) {
+		if(str.length > len) {
+			return str.substring(0, len - 3) + "...";
+		}
+	},
+	splitString: function(str, min = 10) {
+	    if (str.length >= min) {
+	        return str
+	    }
+	    var reg = getRegExp('/\d{4}/g')
+	    rs = str.match(reg)
+        rs.push(s.substring(rs.join('').length))
+        return rs.filter(function(val) {
+            return !(!val || val === '')
+        })
+	}
+}

@@ -1,0 +1,36 @@
+<template lang="pug">
+    scroll-view.scroll-view-classify(scrollX="true")
+        // traverse the categories
+        repeat(for="{{ categories }}", key="index", item="category")
+            view(@tap="chooseCate({{ index }})", class="fq-type-classify {{ category_index == index ? 'fq-choose-active' : ''}}") {{ category.name }}
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import { getStore, connect } from 'wepy-redux'
+    import base from '../../mixins/base'
+    import {
+        switchCategoryIndex,
+        applyCategorySectionFeed
+    } from '../../store/actions'
+    const store = getStore()
+
+    @connect({
+        categories: state => state.home.categories,
+        category_index: state => state.home.category_index
+    })
+    export default class extends wepy.component {
+        methods = {
+            async chooseCate(cate_index) {
+                // switch category index
+                await store.dispatch(switchCategoryIndex(cate_index))
+                // the current index sections is empty then dispatch the current index sections
+                if (this.isEmpty(this.categories[cate_index].sections)) {
+                    await store.dispatch(applyCategorySectionFeed())
+                }
+                this.$root.$apply()
+            }
+        }
+        mixins = [base]
+    }
+</script>

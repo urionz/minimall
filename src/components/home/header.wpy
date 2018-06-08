@@ -1,0 +1,83 @@
+<template lang="pug">
+    view.header
+        view.searLeft(bindtap="search")
+            image(mode="widthFix", src="../../assets/images/66.png")
+        input.search(bindtap="search", disabled="true", placeholder="请输入关键词")
+        view.sign-in
+            text.sign 签到
+            image.sign-btn(src="../../assets/images/1.png")
+</template>
+
+<script>
+    import wepy from 'wepy'
+    export default class extends wepy.component {
+        methods = {
+            search() {
+                this.$root.$navigate('/pages/search/super')
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .header {
+        background: #ff4e65;
+        width: 100%;
+        height: 90rpx;
+    }
+    .searLeft {
+        width: 69rpx;
+        height: 63rpx;
+        text-align: center;
+        line-height: 80rpx;
+        float: left;
+        background: #fff;
+        border-radius: 30rpx 0 0 30rpx;
+        margin: 14rpx 0 0 17rpx;
+    }
+
+    .searLeft image {
+        width: 43rpx;
+        height: 43rpx;
+        float: left;
+        margin-left: 13rpx;
+        margin-top: 10rpx;
+    }
+
+    .search {
+        width: 500rpx;
+        height: 63rpx;
+        background: #fff;
+        margin: 14rpx 0 0 0;
+        float: left;
+        font-size: 24rpx;
+        padding-left: 10rpx;
+        border-radius: 0 30rpx 30rpx 0;
+    }
+
+    .sign {
+        float: left;
+    }
+
+    .sign-in {
+        float: right;
+        width: 113rpx;
+        height: 49rpx;
+        font-size: 24rpx;
+        background: #ff7d8e;
+        color: #fff;
+        border-top-left-radius: 49rpx;
+        border-bottom-left-radius: 49rpx;
+        margin-top: 20rpx;
+        text-align: center;
+        line-height: 49rpx;
+        padding-left: 20rpx;
+    }
+
+    .sign-btn {
+        width: 32rpx;
+        height: 20rpx;
+        margin: 15rpx;
+        float: right;
+    }
+</style>

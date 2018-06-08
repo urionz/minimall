@@ -1,0 +1,410 @@
+<template lang="jade">
+    view.header
+        view.userInfo_img
+            image(backgroundSize="cover", src="{{ info.avatar }}")
+        view.userInfo_name {{ info.nickname }}
+        view.bind_agent
+            image(src="")
+            text 我要开店
+    view.mylist
+        view.li
+            view.listInner
+                view.innerText 我的积分
+                view.innertab
+                    view.innerLeft
+                        image(style="width:36rpx;height:38rpx;float:left;margin-right:10rpx;", src="../../assets/image/68.png")
+                        | 0.00
+                    view.innerRight 明细
+        view.li(style="border:none;")
+            view.listInner
+                view.innerText 我的余额
+                view.innertab
+                    view.innerLeft
+                        image(style="width:41rpx;height:38rpx;float:left;margin-right:10rpx;", src="../../assets/image/153.png")
+                        | 0.00
+                    view.innerRight 提现
+        view.clear
+    view.jianju
+    view.title 会员功能
+    view.list
+        view.li(style="display:table;")
+            view.cell
+                image(src="../../assets/image/user/shop.png")
+                view.liText 我的小店
+        view.li(style="display:table;")
+            view.cell
+                image(src="../../assets/image/40.png")
+                view.liText 我的粉丝
+        view.li(style="display:table;")
+            view.cell
+                image(src="../../assets/image/user/commission.png")
+                view.liText 我的收益
+        button.li(open-type="contact", style="display:table;")
+            view.cell
+                image(src="../../assets/image/41.png")
+                view.liText 联系客服
+        view.li(style="display:table;")
+            view.cell
+                image(src="../../assets/image/user/aboutus.png")
+                view.liText 关于我们
+        view.li(style="display:table;")
+            view.cell
+                image(src="../../assets/image/36.png")
+                view.liText 签到
+        view.clear
+    view.jianju
+    view.version_num 当前版本：{{ appVersion }}
+    quickTool
+</template>
+
+<script>
+    import entry from '../entry'
+    import base from '../../mixins/base'
+    import filter from '../../wxs/helper.wxs'
+    import quickTool from '../../components/common/quick'
+    import {
+        loginAction
+    } from '../../store/actions/user'
+    import { getStore, connect } from 'wepy-redux'
+    import { appVersion } from '../../api'
+    const store = getStore()
+
+    @connect({
+        info: state => state.user.info,
+        token: state => state.user.token
+    })
+    export default class extends entry {
+        data = {
+            appVersion
+        }
+        wxs = {
+            filter
+        }
+        config = {
+            navigationBarTitleText: '首页',
+            enablePullDownRefresh: false,
+            navigationBarTextStyle: '#fff',
+            navigationBarBackgroundColor: '#ff96b4'
+        }
+        mixins = [base]
+        components = {
+            quickTool
+        }
+        async onLoad() {
+            await store.dispatch(loginAction())
+            this.$apply()
+        }
+        methods = {
+        }
+    }
+</script>
+
+<style lang="scss">
+    page {
+        position: relative;
+        background: #ffffff;
+    }
+
+    .clear {
+        clear: both;
+        display: block;
+    }
+
+    view,text {
+        font-size: 24rpx;
+        color: #444;
+    }
+
+    .header {
+        width: 90%;
+        padding: 0 5%;
+        height: 305rpx;
+        background: url(https://wxapi.juhuita.com/img/154.jpg) no-repeat;
+        background-size: cover;
+        position: relative;
+    }
+
+    .userInfo_img {
+        width: 140rpx;
+        height: 140rpx;
+        border-radius: 50%;
+        background: #eee;
+        position: absolute;
+        left: 5%;
+        top: 50%;
+        margin-top: -70rpx;
+        overflow: hidden;
+    }
+
+    .userInfo_img image {
+        width: 100%;
+        height: 100%;
+    }
+
+    .userInfo_name {
+        position: absolute;
+        left: 26%;
+        top: 50%;
+        margin-top: -20rpx;
+        width: 260rpx;
+        height: 40rpx;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #fff;
+        font-size: 26rpx;
+        overflow: hidden;
+    }
+
+    .bind_agent {
+        width: 225rpx;
+        height: 50rpx;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        background: linear-gradient(#f57d92,#ff2166);
+        border-radius: 25rpx 0 0 25rpx;
+        margin-top: -25rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .bind_agent text {
+        color: #fff;
+    }
+
+    .bind_agent image {
+        width: 33rpx;
+        height: 25rpx;
+        margin-right: 5rpx;
+    }
+
+    .to_agent {
+        width: 100%;
+        height: 105rpx;
+    }
+
+    .to_agent image {
+        width: 100%;
+        height: 100%;
+    }
+
+    .mylist {
+        width: 100%;
+        height: 145rpx;
+        background: #fff;
+    }
+
+    .mylist .li {
+        width: 50%;
+        height: 145rpx;
+        float: left;
+        box-sizing: border-box;
+        border-right: 1rpx solid #e8e8e8;
+        display: table;
+    }
+
+    .mylist .li .listInner {
+        width: 80%;
+        padding: 0 10%;
+        display: table-cell;
+        vertical-align: middle;
+        line-height: 60rpx;
+    }
+
+    .mylist .li .listInner .innerText {
+        font-size: 24rpx;
+        color: #666;
+    }
+
+    .mylist .li .listInner .innertab {
+        width: 100%;
+        height: 38rpx;
+    }
+
+    .mylist .li .listInner .innertab .innerLeft {
+        float: left;
+        font-size: 32rpx;
+        color: #ff4e65;
+        height: 38rpx;
+        line-height: 38rpx;
+    }
+
+    .mylist .li .listInner .innertab .innerRight {
+        float: right;
+        width: 104rx;
+        height: 34rpx;
+        border-radius: 17rpx;
+        border: 1rpx solid #ff4e65;
+        text-align: center;
+        line-height: 34rpx;
+        font-size: 24rpx;
+        color: #ff4e65;
+        padding: 0 20rpx;
+    }
+
+    .jianju {
+        width: 100%;
+        height: 10rpx;
+        background: #eee;
+    }
+
+    .title {
+        width: 90%;
+        padding: 0 5%;
+        height: 79rpx;
+        font-size: 24rpx;
+        font-weight: bold;
+        line-height: 79rpx;
+        color: #666;
+    }
+
+    .list {
+        width: 100%;
+        min-height: 145rpx;
+    }
+
+    .list .li {
+        width: 33.2%;
+        height: 145rpx;
+        float: left;
+        display: table;
+    }
+
+    .list .li .cell {
+        width: 100%;
+        height: 125rpx;
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 50rpx;
+        padding-top: 20rpx;
+    }
+
+    .list .li .cell image {
+        width: 40rpx;
+        height: 40rpx;
+    }
+
+    .list .li .cell .liText {
+        font-size: 24rpx;
+        color: #666;
+    }
+
+    .list1 {
+        width: 95%;
+        height: 484rpx;
+        padding: 0 2.5%;
+    }
+
+    .list1 .li1 {
+        width: 100%;
+        height: 94rpx;
+        border-bottom: 1rpx solid #dcdcdc;
+    }
+
+    .list1 .li1 image {
+        float: left;
+        margin-left: 33rpx;
+    }
+
+    .list1 .li1 text {
+        font-size: 26rpx;
+        display: block;
+        height: 94rpx;
+        line-height: 94rpx;
+        color: #444;
+        margin-left: 20rpx;
+        float: left;
+    }
+
+    .list2 {
+        width: 95%;
+        height: 290rpx;
+        padding: 0 2.5%;
+    }
+
+    .list2 .li1 {
+        width: 100%;
+        height: 94rpx;
+        border-bottom: 1rpx solid #dcdcdc;
+    }
+
+    .list2 .li1 image {
+        float: left;
+        margin-left: 33rpx;
+    }
+
+    .list2 .li1 text {
+        font-size: 26rpx;
+        display: block;
+        height: 94rpx;
+        line-height: 94rpx;
+        color: #444;
+        margin-left: 20rpx;
+        float: left;
+    }
+
+    button {
+        background: #fff;
+        border-radius: 0;
+    }
+
+    button::after {
+        width: 0;
+        height: 0;
+    }
+
+    .withOUt_fanli {
+        width: 90%;
+        padding: 0 5%;
+        height: 100rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .wth_left {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .wth_left image {
+        width: 46rpx;
+        height: 48rpx;
+    }
+
+    .wth_left .left_sp1 {
+        margin: 0 10rpx;
+        font-size: 20rpx;
+        color: #444;
+        font-size: 24rpx;
+    }
+
+    .wth_left .left_sp2 {
+        font-size: 32rpx;
+        color: #ff4e65;
+    }
+
+    .wth_right {
+        width: 100rpx;
+        height: 40rpx;
+        line-height: 40rpx;
+        text-align: center;
+        color: #ff4e65;
+        font-size: 24rpx;
+        border: 1rpx solid #ff4e65;
+        border-radius: 30rpx;
+    }
+
+    .version_num {
+        width: 100%;
+        height: 80rpx;
+        text-align: center;
+        line-height: 80rpx;
+        background: #fff;
+        font-size: 24rpx;
+        color: #666;
+    }
+</style>

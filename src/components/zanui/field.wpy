@@ -1,0 +1,131 @@
+<template lang="pug">
+    view(
+        class="zan-cell zan-field {{ error ? 'zan-field--error' : '' }} {{ mode === 'wrapped' ? 'zan-field-wrapped' : '' }}"
+    )
+        view.zen-cell__hd.zan-field__title(
+            wx:if="{{ title }}"
+        ) {{ title }}
+        textarea(
+            wx:if="{{ type === 'textarea' }}",
+            auto-height,
+            name="{{ name || '' }}",
+            disabled="{{ disabled }}",
+            focus="{{ focus }}",
+            value="{{ value }}",
+            placeholder="{{ placeholder }}",
+            class="zan-field__input zan-cell-bd {{ right ? 'zan-field__input--right' : '' }}",
+            placeholder-class="zan-field__placeholder",
+            bindinput="change",
+            bindfocus="focus",
+            bindblur="blur"
+        )
+        input(
+            wx:else,
+            type="{{ inputType || 'text' }}",
+            name="{{ name || '' }}",
+            disabled="{{ disabled }}",
+            focus="{{ focus }}",
+            value="{{ value }}",
+            placeholder="{{ placeholder }}",
+            class="zan-field__input zan-cell-bd {{ right ? 'zan-field__input--right' : '' }}",
+            placeholder-class="zan-field__placeholder",
+            bindinput="change",
+            bindfocus="focus",
+            bindblur="blur"
+        )
+</template>
+
+<script>
+    import wepy from 'wepy'
+    export default class extends wepy.component {
+        props = {
+            title: String,
+            name: String,
+            type: {
+                type: String,
+                default: 'input'
+            },
+            value: String,
+            disabled: Boolean,
+            inputType: {
+                type: String,
+                default: 'text'
+            },
+            placeholder: String,
+            focus: Boolean,
+            mode: {
+                type: String,
+                default: 'normal'
+            },
+            right: Boolean,
+            error: Boolean
+        }
+        methods = {
+            change(event) {
+                this.$emit('fieldChange', event)
+            },
+            focus(event) {
+                this.$emit('fieldFocus', event)
+            },
+            blur(event) {
+                this.$emit('fieldBlur', event)
+            }
+        }
+    }
+</script>
+
+<style lang="scss">
+    @import "../../assets/styles/zanui/cell";
+    .zan-field {
+        padding: 7px 15px;
+        color: #333;
+    }
+
+    .zan-field--wrapped {
+        margin: 10px 15px;
+        background-color: #fff;
+
+        &::after {
+            left: 0;
+            border-width: 1px;
+            border-radius: 4px;
+        }
+    }
+
+    /* 圆角输入框，强制展示边框 */
+    .zan-field.zan-field--wrapped::after {
+        display: block;
+    }
+
+    .zan-field--error {
+        color: #f40;
+    }
+
+    /* 圆角输入框出现错误时，将边框也置红 */
+    .zan-field--wrapped.zan-field--error::after  {
+        border-color: #f40;
+    }
+
+    .zan-field__title {
+        color: #333;
+        min-width: 65px;
+        padding-right: 10px;
+    }
+
+    .zan-field__input {
+        flex: 1;
+        line-height: 1.6;
+        padding: 4px 0;
+        min-height: 22px;
+        height: auto;
+        font-size: 14px;
+    }
+
+    .zan-field__placeholder {
+        font-size: 14px;
+    }
+
+    .zan-field__input--right {
+        text-align: right;
+    }
+</style>

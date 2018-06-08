@@ -1,0 +1,40 @@
+<template lang="pug">
+    view.announcement
+        view.announcement_left
+            image(src="../../assets/images/335.gif")
+            text.announcement_text 公告
+        view.announcement_right#announcement_outer
+            view.announcement_marquee#announcement_inner(style="left: 3px")
+                repeat(for="{{ section.feeds }}", key="{{ feed.id }}", item="feed")
+                    | {{ feed.title }}
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import base from '../../mixins/base'
+
+    export default class extends wepy.component {
+        props = {
+            section: {
+                type: Object,
+                default: {
+                    style: {
+                        layout: 0
+                    },
+                    feeds: [
+                        {
+                            id: 0,
+                            title: '',
+                            thumb_x: ''
+                        }
+                    ]
+                }
+            }
+        }
+        mixins = [base]
+    }
+</script>
+
+<style>
+
+</style>

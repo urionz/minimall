@@ -1,0 +1,26 @@
+development:
+    api_host: 39.108.223.220
+    api_version: v1.0
+    http_schema: http
+    app_key: LQzS9Yd96ar5
+    app_version: 1.0.5
+    global_duration: 1000
+    global_timeout: 10000
+
+testing:
+    api_host: 39.108.223.220
+    api_version: v1.0
+    http_schema: http
+    app_key: LQzS9Yd96ar5
+    app_version: 1.0.2
+    global_duration: 1000
+    global_timeout: 10000
+
+production:
+    api_host: api.rrhgo.com
+    api_version: v1.0
+    http_schema: https
+    app_key: LQzS9Yd96ar5
+    app_version: 1.0.5
+    global_duration: 1000
+    global_timeout: 10000

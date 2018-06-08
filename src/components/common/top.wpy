@@ -1,0 +1,28 @@
+<template lang="pug">
+    view.goTop(bindtap="toTop")
+        image(mode="widthFix", src="../../assets/images/24.png", style="width: 100%")
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class extends wepy.component {
+        methods = {
+            toTop() {
+                this.$emit('toTop', this)
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .goTop {
+        width: 90rpx;
+        height: 90rpx;
+        position: fixed;
+        bottom: 110rpx;
+        right: 27rpx;
+        border-radius: 50%;
+        z-index: 500;
+    }
+</style>

@@ -1,0 +1,37 @@
+<template lang="pug">
+    view.banner.banner-style-1.mb20
+        swiper.swiper(autoplay="true", circular="true", duration="500", indicatorDots="true", interval="5000")
+            repeat(for="{{ section.feeds }}", key="{{ feed.id }}", item="feed")
+                navigator
+                    swiper-item.item
+                        image.slide-image(mode="aspectFill", src="{{ feed.thumb_x }}")
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import base from '../../mixins/base'
+    export default class extends wepy.component {
+        props = {
+            section: {
+                type: Object,
+                default: {
+                    style: {
+                        layout: 0
+                    },
+                    feeds: [
+                        {
+                            id: 0,
+                            title: '',
+                            thumb_x: ''
+                        }
+                    ]
+                }
+            }
+        }
+        mixins = [base]
+    }
+</script>
+
+<style>
+
+</style>

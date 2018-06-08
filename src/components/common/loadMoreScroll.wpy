@@ -1,0 +1,95 @@
+<template lang="jade">
+    slot(name="content")
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import goToTop from './top'
+
+    export default class extends wepy.component {
+        props = {
+            scrollY: {
+                type: Boolean,
+                default: true
+            },
+            lowerThreshold: {
+                type: Number,
+                default: 276
+            },
+            scrollWidthAnimation: false,
+            scrollTop: 0,
+            enableBackToTop: false,
+            class: {
+                type: String,
+                default: ''
+            },
+            goToTop: {
+                type: Object,
+                default: {
+                    hidden: true
+                }
+            },
+            tips_class: {
+                type: String,
+                default: ''
+            },
+            tips_content: {
+                type: String,
+                default: '客官别急正在加载中~'
+            },
+            tips_hidden: {
+                type: Boolean,
+                default: true
+            },
+            block: {
+                type: Boolean,
+                default: false
+            }
+        }
+        components = {
+            goToTop
+        }
+        events = {
+            toTop() {
+                if (this.scrollTop == 0) {
+                    this.scrollTop = 1
+                } else {
+                    this.scrollTop = 0
+                }
+                this.goToTop.hidden = true
+                this.$root.$apply()
+            }
+        }
+        methods = {
+            scroll({ detail }) {
+                if (detail.scrollTop > 50) {
+                    this.goToTop.hidden = false
+                } else {
+                    this.goToTop.hidden = true
+                }
+                this.$root.$apply()
+            },
+            scrollToLower() {
+                this.$emit('loadMoreHandle')
+                this.tips_hidden = false
+            },
+            loaded() {
+                this.tips_hidden = true
+                this.block = false
+                this.$root.$apply()
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .bottom-tips {
+        width: 100%;
+        height: 100rpx;
+        background: #fff;
+        text-align: center;
+        line-height: 100rpx;
+        font-size: 24rpx;
+        color:#666;
+    }
+</style>

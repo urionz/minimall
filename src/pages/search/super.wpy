@@ -1,0 +1,268 @@
+<template lang="pug">
+    quickTool
+    view.searchGroup
+        view.searchKuang
+            view.tab1(animation="{{ animationLarge }}", bindtap="switchTab") 大额
+                text(style="float: right; display: block; margin-top: -4rpx") ⇌
+            view.tab2(animation="{{ animationNet }}", bindtap="switchTab") 全网
+                text(style="float: right; display: block; margin-top: -4rpx") ⇌
+            view.search-click
+                image(mode="widthFix", src="../../assets/image/65.png")
+            input#search(placeholder="", bindinput="input" value="{{ value }}", placeholderStyle="color: #666", type="text")
+        view.sear_btn(bindtap="search") 搜索
+    view.history
+        view.htLsft 历史记录
+        view.delTubiao
+            image(mode="widthFix", src="../../assets/image/137.png")
+        view.hyList
+            repeat(for="{{ histories }}", key="index", item="history")
+                view.li {{ history }}
+    view.history
+        view.htLsft 推荐搜索
+        view.delTubiao
+            image(mode="widthFix", src="../../assets/image/138.png", style="width: 30rpx")
+        view.hyList
+            repeat(for="{{ hots }}", key="index", item="hot")
+                view.li {{ hot.title }}
+</template>
+
+<script>
+    import entry from '../entry'
+    import { getStore, connect } from 'wepy-redux'
+    import {
+        hotsList
+    } from '../../store/actions'
+    import base from '../../mixins/base'
+    import quickTool from '../../components/common/quick'
+    const store = getStore()
+
+    @connect({
+        hots: state => state.search.hots,
+        keyword: state => state.search.keyword
+    })
+    export default class extends entry {
+        config = {
+            navigationBarTitleText: '查优惠券'
+        }
+        components = {
+            quickTool
+        }
+        data = {
+            animation: '',
+            animationLarge: '',
+            animationNet: '',
+            type: 'large',
+            value: ''
+        }
+        async onLoad(params, { preload }) {
+            await super.onLoad()
+            if (preload) {
+                if (preload.title) this.value = preload.title
+            }
+            this.animation = wx.createAnimation({
+                transformOrigin: '50% 50%',
+                duration: 1000,
+                timingFunction: 'ease',
+                delay: 0
+            })
+            setTimeout(() => {
+                this.animation.rotateY(0).step()
+                if (this.type == 'large') {
+                    this.animationLarge = this.animation.export()
+                } else {
+                    this.animationNet = this.animation.export()
+                }
+                this.$apply()
+            }, 500)
+            if (!this.isEmpty(this.hots)) return
+            await store.dispatch(hotsList())
+        }
+        methods = {
+            confirm() {
+                const keyword = this.keyword.replace(/(^\s*)|(\s*$)/g, '')
+                if (keyword.length != 0) {
+
+                } else {
+                }
+            },
+            input({ detail }) {
+                this.value = detail.value
+            },
+            clear() {
+
+            },
+            result() {
+
+            },
+            search() {
+                this.$navigate('/pages/product/list')
+            },
+            switchTab() {
+                const animation = wx.createAnimation({
+                    transformOrigin: '50% 50%',
+                    duration: 1000,
+                    timingFunction: 'ease',
+                    delay: 0
+                })
+                if (this.type == 'large') {
+                    this.type = 'net'
+                    animation.rotateY(180).step()
+                    this.animationLarge = animation.export()
+                    animation.rotateY(0).step()
+                    this.animationNet = animation.export()
+                } else {
+                    this.type = 'large'
+                    animation.rotateY(-180).step()
+                    this.animationNet = animation.export()
+                    animation.rotateY(0).step()
+                    this.animationLarge = animation.export()
+                }
+            }
+        }
+        mixins = [base]
+    }
+</script>
+
+<style>
+    page {
+        background: #fff;
+        font-family: "微软雅黑";
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .searchGroup {
+        width: 100%;
+        height: 71rpx;
+        margin-top: 10rpx;
+    }
+
+    .searchKuang {
+        width: 82.5%;
+        height: 71rpx;
+        background: #ebebeb;
+        border-radius: 36rpx;
+        margin-left: 3.3%;
+        float: left;
+        position: relative;
+    }
+
+    .sear_btn {
+        width: 14%;
+        height: 71rpx;
+        float: right;
+        text-align: center;
+        line-height: 71rpx;
+        font-size: 28rpx;
+    }
+
+    .tab1 {
+        width: 90rpx;
+        height: 67rpx;
+        margin: 2rpx 1rpx;
+        border-radius: 35rpx;
+        background: #ff312a;
+        color: #fff;
+        font-size: 26rpx;
+        text-align: center;
+        line-height: 67rpx;
+        padding-right: 14rpx;
+        position: absolute;
+        backface-visibility: hidden;
+        transform: rotateY(180deg);
+    }
+
+    .tab2 {
+        width: 90rpx;
+        height: 67rpx;
+        margin: 2rpx 1rpx;
+        border-radius: 35rpx;
+        background: #ff4e36;
+        color: #fff;
+        font-size: 26rpx;
+        text-align: center;
+        line-height: 67rpx;
+        padding-right: 14rpx;
+        position: absolute;
+        backface-visibility: hidden;
+        transform: rotateY(-180deg);
+    }
+
+    .search-click {
+        width: 50rpx;
+        height: 71rpx;
+        float: left;
+        margin-left: 104rpx;
+        position: relative;
+    }
+
+    .search-click image {
+        width: 30rpx;
+        height: 28rpx;
+        position: absolute;
+        top: 50%;
+        margin-top: -16rpx;
+        left: 15rpx;
+    }
+
+    #search {
+        width: 73%;
+        height: 71rpx;
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 24rpx;
+        color: #222;
+    }
+
+    .history {
+        width: 92%;
+        min-height: 95rpx;
+        margin-top: 10rpx;
+        padding: 0 4%;
+        font-size: 24rpx;
+    }
+
+    .htLsft {
+        width: 50%;
+        float: left;
+        height: 95rpx;
+        line-height: 95rpx;
+    }
+
+    .delTubiao {
+        width: 50%;
+        float: right;
+        position: relative;
+        height: 95rpx;
+    }
+
+    .delTubiao image {
+        width: 26rpx;
+        position: absolute;
+        top: 50%;
+        margin-top: -14rpx;
+        right: 10rpx;
+    }
+
+    .hyList {
+        width: 100%;
+        overflow: hidden;
+        zoom: 1;
+    }
+
+    .hyList .li {
+        min-width: 60rpx;
+        min-height: 59rpx;
+        background: #f5f5f5;
+        padding: 0 35rpx;
+        float: left;
+        line-height: 59rpx;
+        border-radius: 4rpx;
+        color: #666;
+        margin-right: 20rpx;
+        margin-bottom: 15rpx;
+    }
+</style>

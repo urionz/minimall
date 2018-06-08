@@ -1,0 +1,206 @@
+<template lang="pug">
+    //view.buttonTips
+        image(src="../../../assets/image/icon/totips.png")
+    view.smallmenu(catchtouchmove="catchTouchMove")
+        repeat(for="{{ box }}", key="{{ quick.name }}", item="quick")
+            view(animation="{{ quick.animate }}")
+                text {{ quick.name }}
+                image(src="{{ quick.img }}")
+            view.smallmenuButton(animation="{{ button_animate }}", bindtap="toggle({{ !display }})")
+                image(src="../../assets/image/icon/tomore.png")
+    view.shade(hidden="{{ !display }}", catchtouchmove="catchTouchMove", bindtap="toggle({{ !1 }})")
+    view.toTop(bindtap="toTop")
+        image(mode="scaleToFill", src="../../assets/image/icon/totop.png")
+</template>
+
+<script>
+    import wepy from 'wepy'
+    export default class extends wepy.component {
+        props = {
+            display: false,
+            box: {
+                type: Array,
+                default: [{
+                    name: '首页',
+                    img: '../../assets/image/191.png',
+                    redirectType: 'switch',
+                    path: '/pages/home/index',
+                    animate: {}
+                }, {
+                    name: '保存',
+                    img: '../../assets/image/192.png',
+                    path: '',
+                    event: 'save',
+                    animate: {}
+                }, {
+                    name: '分享',
+                    img: '../../assets/image/193.png',
+                    path: '',
+                    event: 'share',
+                    animate: {}
+                }, {
+                    name: '搜索',
+                    img: '../../assets/image/194.png',
+                    path: '/pages/search/super',
+                    redirectType: 'navigate',
+                    args: 'title',
+                    animate: {}
+                }, {
+                    name: '我的',
+                    img: '../../assets/image/196.png',
+                    path: '/pages/user/index',
+                    redirectType: 'switch',
+                    animate: {}
+                }, {
+                    name: '客服',
+                    img: '../../assets/image/195.png',
+                    path: '',
+                    event: 'customer',
+                    openType: 'contact',
+                    animate: {}
+                }]
+            }
+        }
+        onLoad() {
+            this.box = this.box.filter(value => {
+                return value.path != `/${this.$wxpage.route}`
+            })
+            this.$apply()
+        }
+        methods = {
+            catchTouchMove() {},
+            toggle(display) {
+                const animate = wx.createAnimation({
+                    duration: 200,
+                    timingFunction: 'ease-out'
+                })
+                if (display) {
+                    this.box.forEach((key, index) => {
+                        this.box[index].animate = animate.translate(0, -60 * (index + 1)).rotateZ(0).opacity(1).step().export()
+                    })
+                } else {
+                    this.box.forEach((key, index) => {
+                        this.box[index].animate = animate.translate(0, 0).rotateZ(0).opacity(0).step().export()
+                    })
+                }
+                this.display = display
+            },
+            toTop() {
+                wx.pageScrollTo({
+                    scrollTop: 0,
+                    duration: 400
+                })
+            },
+            quickEvent(quick) {
+                if (quick.path) {
+                    this.$emit('toggle', false)
+                    this.$root[`$${quick.redirectType}`](`${quick.path}`)
+                }
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .smallmenu {
+        position: fixed;
+        bottom: 240rpx;
+        right: 20rpx;
+        z-index: 999;
+        width: 160rpx;
+        height: 60rpx;
+    }
+
+    .smallmenu view {
+        width: 100%;
+        height: 100%;
+        display: block;
+        position: absolute;
+        z-index: 100;
+        opacity: 0;
+    }
+
+    .smallmenu view button {
+        background: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .smallmenu view text {
+        height: 60rpx;
+        width: 90rpx;
+        float: left;
+        text-align: right;
+        line-height: 60rpx;
+        color: #fff;
+        font-size: 24rpx;
+        margin-right: 10rpx;
+    }
+
+    .smallmenu view image {
+        float: right;
+    }
+
+    .smallmenu view.smallmenuButton {
+        opacity: 1;
+    }
+
+    .smallmenu image {
+        background: #fff;
+        height: 32rpx;
+        width: 32rpx;
+        padding: 14rpx;
+        border-radius: 50%;
+    }
+
+    .smallmenu view.smallmenuButton image {
+        background: #333;
+    }
+
+    .shade {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        z-index: 888;
+    }
+
+    .buttonTips {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        z-index: 888;
+    }
+
+    .buttonTips image {
+        width: 365rpx;
+        height: 193rpx;
+        position: fixed;
+        bottom: 290rpx;
+        right: 10rpx;
+    }
+
+    .toTop {
+        position: fixed;
+        bottom: 150rpx;
+        right: 19rpx;
+        z-index: 999;
+        width: 60rpx;
+        height: 60rpx;
+        padding: 0;
+        margin: 0;
+    }
+
+    .toTop image {
+        background: #333;
+        width: 32rpx;
+        height: 32rpx;
+        padding: 14rpx;
+        border-radius: 50%;
+    }
+</style>

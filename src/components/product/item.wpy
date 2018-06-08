@@ -1,0 +1,73 @@
+<template lang="pug">
+    block(wx:if="{{ layout == 1 }}")
+        view.nav
+            view.li()
+    view.screen
+        view.title
+            view.sigma-middle-line
+            image.sigma-line-img(src="../../assets/images/16.png")
+        view.nav.bc_white
+            view.click-screen 最新
+            view.click-screen 销量
+            view.click-screen 价格
+            view.click-screen 优惠
+        repeat(for="{{ section.feeds }}", key="{{ feed.id }}", item="feed")
+            view.list
+                view.list-img
+                    image(mode="scaleToFill", src="{{ feed.thumb_x }}")
+                    view.quan 券￥{{ filter.toFixed(feed.coupon_price / 100) }}
+                view.title
+                    image.little-logo(src="{{ feed.platform==1 ? (feed.shop_type == 2 ? configure.resource.b_icon : configure.resource.m_icon ) : config.resource.pdd_icon }}")
+                    text.list-title {{ feed.title }}
+                    view.clear
+                view.price
+                    view.price-left
+                        text(style="font-size: 30rpx;color: #ff4e65;") ￥{{ filter.toFixed(feed.net_price / 100) }}
+                        |券后
+                    view.price_right 销量 {{ feed.sold_quantity }}
+                    view.clear
+                view.quan2
+                    view.quan_left 券￥{{ filter.toFixed(feed.coupon_price / 100) }}
+                    view.quan_center 约返
+                    view.quan_right {{ filter.toFixed(feed.commission / 100) }}元
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import base from '../../mixins/base.wpy'
+    import filter from '../../wxs/helper.wxs'
+    export default class extends wepy.component {
+        props = {
+            layout: {
+                type: Number,
+                default: 2
+            },
+            feeds: {
+                type: Array,
+                default: [{
+                    shop_type: 2,
+                    thumb_x: '',
+                    title: '',
+                    net_price: 0.00,
+                    sold_quantity: 0,
+                    coupon_price: 0.00
+                }]
+            }
+        }
+        wxs = {
+            filter
+        }
+        mixins = [base]
+    }
+</script>
+
+<style>
+    .fq-goods-title image {
+        position: relative;
+        top: 1.5px;
+        display: -webkit-inline-flex;
+        display: inline-flex;
+        width: 14px;
+        height: 14px;
+    }
+</style>

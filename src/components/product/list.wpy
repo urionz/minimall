@@ -1,0 +1,76 @@
+<template lang="pug">
+    view.goodslist.btb1rpx
+        repeat(for="{{ section.feeds }}", key="{{ feed.id }}", item="feed")
+            view.list_item(bindtap="detail({{ feed }})")
+                view.list_item_box
+                    view.img
+                        image.radius(src="{{ feed.thumb_x }}")
+                    view.info
+                        view.left
+                            view.title
+                                image(mode="widthFix", src="../../assets/image/icon/{{ feed.shop_type }}.png")
+                                text {{ feed.title }}
+                            view.btext
+                                text.oprice 原价{{ filter.toFixed(feed.price / 100) }}
+                                text 月销量{{ feed.sold_quantity }}
+                            view.couponPrice {{ filter.toFixed(feed.coupon_price / 100) }}元券
+                                view.l
+                                view.r
+                            view.price
+                                view.couponIcon 券后价
+                                text.dprice ￥{{ filter.toFixed(feed.net_price / 100) }}
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import base from '../../mixins/base.wpy'
+    import categoryView from '../common/category'
+    import sortView from '../common/sort'
+    import filter from '../../wxs/helper.wxs'
+
+    export default class extends wepy.component {
+        props = {
+            sort: {
+                type: Object,
+                default: {}
+            },
+            section: {
+                type: Object,
+                default: {
+                    style: {
+                        layout: 0
+                    },
+                    feeds: [
+                        {
+                            id: 0,
+                            title: '',
+                            thumb_x: ''
+                        }
+                    ]
+                }
+            },
+            layout: {
+                type: Number,
+                default: 2
+            }
+        }
+        wxs = {
+            filter
+        }
+        components = {
+            categoryView,
+            sortView
+        }
+        mixins = [base]
+        methods = {
+            detail(feed) {
+                this.$root.$preload('detail', feed)
+                this.$root.$navigate('/pages/product/detail')
+            }
+        }
+    }
+</script>
+
+<style>
+
+</style>

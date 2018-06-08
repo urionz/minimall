@@ -1,0 +1,1 @@
+export const INIT_HOT_KEYWORDS = 'INIT_HOT_KEYWORDS'

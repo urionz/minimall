@@ -1,0 +1,89 @@
+<script>
+    import wepy from 'wepy'
+    import 'wepy-async-function'
+    import { setStore } from 'wepy-redux'
+    import configStore from './store'
+    const store = configStore()
+    setStore(store)
+    export default class extends wepy.app {
+        globalData = {
+            auth: {
+                device_id: 0,
+                configure: {}
+            }
+        }
+        constructor() {
+            super()
+            this.use('requestfix')
+            this.use('promisify')
+        }
+        onLaunch() {
+            this.asyncStoreConfig('device_id')
+            this.asyncStoreConfig('configure')
+        }
+        asyncStoreConfig(key) {
+            try {
+                const value = wepy.getStorageSync(key)
+                if (value !== '') {
+                    console.info(`[auth]${key} sync success`)
+                    wepy.$instance.globalData.auth[key] = value
+                }
+            } catch (e) {
+                console.warn(`[auth]${key} sync fail error:`, e)
+            }
+        }
+        config = {
+            pages: [
+                'pages/home/index',
+                'pages/search/index',
+                'pages/search/super',
+                'pages/video/index',
+                'pages/user/index',
+                'pages/product/detail',
+                'pages/wizard/index',
+                'pages/category/index',
+                'pages/product/list'
+            ],
+            window: {
+                backgroundTextStyle: 'light',
+                navigationBarBackgroundColor: '#fff',
+                navigationBarTitleText: '首页',
+                navigationBarTextStyle: 'black'
+            },
+            tabBar: {
+                color: '#333',
+                selectedColor: '#f96150',
+                list: [{
+                    pagePath: 'pages/home/index',
+                    text: '首页',
+                    iconPath: './assets/image/home-normal.png',
+                    selectedIconPath: './assets/image/home-select.png'
+                }, {
+                    pagePath: 'pages/category/index',
+                    text: '分类',
+                    iconPath: './assets/image/allsort.png',
+                    selectedIconPath: './assets/image/allsort-d.png'
+                }, {
+                    pagePath: 'pages/search/index',
+                    text: '找优惠券',
+                    iconPath: './assets/image/ic_sp_n.png',
+                    selectedIconPath: './assets/image/ic_sp_s.png'
+                }, {
+                    pagePath: 'pages/video/index',
+                    text: '视频购物',
+                    iconPath: './assets/image/vi_n.png',
+                    selectedIconPath: './assets/image/vi_s.png'
+                }, {
+                    pagePath: 'pages/user/index',
+                    text: '个人中心',
+                    iconPath: './assets/image/man-normal.png',
+                    selectedIconPath: './assets/image/man-select.png'
+                }]
+            }
+        }
+    }
+</script>
+
+<style lang="scss">
+    @import "assets/styles/app.scss";
+</style>

@@ -1,0 +1,18 @@
+<script>
+    import wepy from 'wepy'
+    import isEmpty from 'lodash.isempty'
+    import tips from '../utils/tips'
+    export default class base extends wepy.mixin {
+        computed = {
+            configure() {
+                return wepy.$instance.globalData.auth.configure
+            },
+            tips() {
+                return tips
+            }
+        }
+        isEmpty(data) {
+            return isEmpty(data)
+        }
+    }
+</script>

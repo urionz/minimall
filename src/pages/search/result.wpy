@@ -1,0 +1,19 @@
+<template lang="jade">
+    loadmore(:loading.sync="loading")
+</template>
+
+<script>
+    import entry from '../entry'
+    import loadmore from '../../components/zanui/loadmore'
+    import quickTool from '../../components/common/quick'
+
+    export default class extends entry {
+        components = {
+           loadmore
+        }
+    }
+</script>
+
+<style>
+
+</style>

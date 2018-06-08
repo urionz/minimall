@@ -1,0 +1,8 @@
+<script>
+    import wepy from 'wepy'
+    export default class base extends wepy.mixin {
+        onReachBottom() {
+            console.log('onReachBottom')
+        }
+    }
+</script>

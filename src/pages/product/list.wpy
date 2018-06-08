@@ -1,0 +1,26 @@
+<template lang="jade">
+    loadmore(loading.sync="loading")
+        view.container(slot="content")
+            listProduct(:section.sync="products")
+    quickTool
+</template>
+
+<script>
+    import entry from '../entry'
+    import quickTool from '../../components/common/quick'
+    import loadmore from '../../components/zanui/loadmore'
+    import listProduct from '../../components/product/list'
+    export default class extends entry {
+        data = {
+            products: []
+        }
+        components = {
+            quickTool,
+            loadmore,
+            listProduct
+        }
+        onLoad() {
+
+        }
+    }
+</script>

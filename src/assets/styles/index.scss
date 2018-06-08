@@ -1,0 +1,328 @@
+page {
+    // padding-bottom: 120rpx;
+}
+
+.btb1rpx {
+    border-top: 0;
+    border-bottom: 0;
+}
+
+.homeload {
+    margin-bottom: 1rpx;
+}
+
+.banner {
+    background: #eee;
+    border-radius: 15rpx;
+}
+
+.banner-style-1,.banner-style-1 .swiper {
+    box-shadow: 0 0 0;
+    margin: 0;
+    border-radius: 0;
+}
+
+.swiper {
+    width: 100%;
+    border-radius: 15rpx;
+    overflow: hidden;
+}
+
+.swiper image {
+    height: 100%;
+    width: 100%;
+}
+
+.entrance-5 {
+    width: 100%;
+    background: #fff;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 20rpx 0 0;
+}
+
+.entrance-5 .item {
+    width: 20%;
+    text-align: center;
+    margin-bottom: 20rpx;
+}
+
+.entrance-5 .item image {
+    width: 70%;
+    margin: 0 15% 10rpx;
+    float: left;
+}
+
+.entrance-5 .item text {
+    font-size: 24rpx;
+    float: left;
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.entrance-scroll {
+    display: block;
+    background: #fff;
+}
+
+.entrance-scroll .scroll-view {
+    white-space: nowrap;
+    display: flex;
+    margin: 20rpx 0 0;
+}
+
+.entrance-scroll .scroll-view .item {
+    width: 165rpx;
+    height: 150rpx;
+    display: inline-block;
+    margin-bottom: 20rpx;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    color: transparent;
+}
+
+.entrance-scroll .item image {
+    width: 70%;
+    margin: 0 15% 10rpx;
+    float: left;
+}
+
+.entrance-scroll .item text {
+    font-size: 24rpx;
+    float: left;
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.lattice-4 {
+    height: 375rpx;
+    overflow: hidden;
+}
+
+.lattice-4 image {
+    width: 100%;
+    background: #fff;
+}
+
+.lattice-4 .br1rpx {
+    border-right: 1rpx solid #f5f5f5;
+}
+
+.lattice-4 .fright {
+    float: right;
+    height: 100%;
+}
+
+.lattice-4 .one,.lattice-4 .two,.lattice-4 .three {
+    height: 50%;
+    float: left;
+    border-radius: 10rpx;
+}
+
+.lattice-4 .one {
+    width: 100%;
+}
+
+.lattice-4 .two,.lattice-4 .three {
+    width: 50%;
+    border-top: 1rpx solid #f5f5f5;
+    margin-top: -1rpx;
+}
+
+.lattice-4 .three {
+    float: right;
+    border-left: 1rpx solid #f5f5f5;
+    margin-left: -1rpx;
+}
+
+.cxx-module .head {
+    background: #fff;
+    width: 100%;
+    float: left;
+    padding-top: 20rpx;
+    padding-bottom: 30rpx;
+    height: 48rpx;
+    line-height: 48rpx;
+}
+
+.cxx-module .head text {
+    font-size: 24rpx;
+    float: right;
+    color: #999;
+    margin-right: 20rpx;
+}
+
+.cxx-module .head .title {
+    font-size: 28rpx;
+    color: #ff464e;
+    display: inline-block;
+    padding: 0 20rpx;
+    text-align: center;
+    font-weight: 700;
+    padding-left: 80rpx;
+    position: relative;
+}
+
+.cxx-module .head .title .zan-icon {
+    font-size: 48rpx;
+    position: absolute;
+    top: 0;
+    left: 20rpx;
+}
+
+.scroll-goods {
+    display: block;
+    background: #fff;
+}
+
+.scroll-goods .scroll-view {
+    white-space: nowrap;
+    display: flex;
+    margin: 20rpx 0 0;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    color: transparent;
+}
+
+.scroll-goods .scroll-view .item-goods {
+    width: 200rpx;
+    height: 310rpx;
+    margin-left: 20rpx;
+    display: inline-block;
+}
+
+.scroll-goods .scroll-view .item-goods .item-all {
+    font-size: 24rpx;
+    color: #999;
+    width: 198rpx;
+    height: 170rpx;
+    text-align: center;
+    float: left;
+    background: #f5f5f5;
+    background-size: 40%;
+    padding-top: 28rpx;
+}
+
+.scroll-goods .scroll-view .item-goods .item-all .zan-icon {
+    width: 100%;
+    display: block;
+    font-size: 80rpx;
+    color: #ccc;
+}
+
+.scroll-goods .scroll-view .item-goods:last-child {
+    margin-right: 20rpx;
+}
+
+.scroll-goods .scroll-view .item-goods image {
+    width: 200rpx;
+    height: 200rpx;
+    float: left;
+}
+
+.scroll-goods .scroll-view .item-goods .item {
+    width: 100%;
+    text-align: center;
+    float: left;
+    margin: 10rpx 0 0;
+    padding: 0;
+}
+
+.scroll-goods .scroll-view .item-goods .progress {
+    background-image: linear-gradient(to top,#e6e9f0 0%,#eef1f5 100%);
+    height: 20rpx;
+    width: 80%;
+    float: left;
+    margin: 10rpx 10% 0;
+    border-radius: 10rpx;
+    overflow: hidden;
+    font-size: 14rpx;
+    line-height: 20rpx;
+    color: #fff;
+    text-align: center;
+    position: relative;
+}
+
+.scroll-goods .scroll-view .item-goods .progress view.text {
+    position: absolute;
+    width: 100%;
+    height: 20rpx;
+    line-height: 20rpx;
+    display: block;
+    left: 0;
+    top: 0;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 1px rgba(255,70,78,0.4),1px 0 rgba(255,70,78,0.4),-1px 0 rgba(255,70,78,0.4),0 -1px rgba(255,70,78,0.4);
+}
+
+.scroll-goods .scroll-view .item-goods .progress view.surplus {
+    width: 87%;
+    height: 20rpx;
+    background: #ff464e;
+    background-image: linear-gradient(-45deg,rgba(255,255,255,0.2) 25%,transparent 25%,transparent 50%,rgba(255,255,255,0.2) 50%,rgba(255,255,255,0.2) 75%,transparent 75%,transparent);
+}
+
+.scroll-goods .scroll-view .item-goods .zan-tag {
+    font-size: 18rpx;
+}
+
+.scroll-goods .scroll-view .item-goods .price {
+    font-size: 22rpx;
+    height: 32rpx;
+    line-height: 32rpx;
+}
+
+.scroll-goods .scroll-view .item-goods .price text {
+    font-weight: 700;
+}
+
+.scroll-goods .scroll-view .item-goods .info {
+    font-size: 20rpx;
+}
+
+.ad {
+    width: 100%;
+    background: #fff;
+}
+
+.ad image {
+    width: 100%;
+}
+
+.popup {
+    background: rgba(0,0,0,0.7);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999999;
+}
+
+.popupImage {
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+
+.popupClose {
+    width: 72rpx;
+    height: 72rpx;
+    position: absolute;
+    left: 50%;
+    bottom: 100rpx;
+    margin-left: -36rpx;
+    color: #fff;
+    font-size: 72rpx;
+}

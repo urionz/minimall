@@ -1,0 +1,15 @@
+<template lang="pug">
+    quickTool
+    view.Img
+        image(mode="widthFix", src="http://wxapi.tkjidi.cn/img/144.jpg")
+</template>
+
+<script>
+    import entry from '../entry'
+    import quickTool from '../../components/common/quick'
+    export default class extends entry {
+        components = {
+            quickTool
+        }
+    }
+</script>

@@ -1,0 +1,19 @@
+<template lang="jade">
+    view.zan-row allsort
+        repeat()
+            view.zan-col.zan-col-8
+                image(mode="widthFix", src="")
+                text.name
+                text.desc
+</template>
+
+<script>
+    import entry from '../entry'
+    export default class extends entry {
+
+    }
+</script>
+
+<style>
+
+</style>
